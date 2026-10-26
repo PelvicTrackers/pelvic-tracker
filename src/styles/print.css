@@ -1,0 +1,239 @@
+/* Screen View Default: Hide print report entirely */
+.print-only {
+  display: none;
+}
+
+/* ==========================================================================
+   Print Rules for Physical Therapy Clinical Reports (@media print)
+   ========================================================================== */
+@media print {
+  @page {
+    margin: 12mm 15mm;
+    size: portrait;
+  }
+
+  html,
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Explicitly isolate print by hiding all application chrome and modals */
+  .modal-overlay,
+  .modal-content,
+  .modal-backdrop,
+  main,
+  header,
+  nav,
+  .top-header,
+  .bottom-nav,
+  .bottom-tabs,
+  .no-print,
+  .btn-primary,
+  .btn-secondary,
+  .icon-btn,
+  .privacy-badge,
+  input,
+  button,
+  select,
+  textarea {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+
+  /* Container adjustments */
+  .app-container,
+  .main-view-container {
+    display: block !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Reveal only the clinical report */
+  .print-only {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-only header {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    width: auto !important;
+    opacity: 1 !important;
+    border-bottom: 2px solid #2B7A68 !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .print-only h1 {
+    font-size: 16pt !important;
+    color: #1C2D27 !important;
+    margin: 0 0 4px 0 !important;
+  }
+
+  .print-only h2 {
+    font-size: 11pt !important;
+    color: #2B7A68 !important;
+    border-bottom: 1px solid #CCCCCC !important;
+    padding-bottom: 4px !important;
+    margin: 16px 0 8px 0 !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  .print-only h3 {
+    font-size: 10pt !important;
+    color: #1C2D27 !important;
+    margin: 10px 0 4px 0 !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* High-contrast, clean clinical tables with crisp borders */
+  .print-only table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 14px !important;
+    font-size: 8.5pt !important;
+    page-break-inside: auto !important;
+  }
+
+  .print-only th,
+  .print-only td {
+    border: 1px solid #777777 !important;
+    padding: 5px 6px !important;
+    text-align: left !important;
+    vertical-align: top !important;
+    color: #000000 !important;
+    background: #FFFFFF !important;
+    word-break: break-word !important;
+  }
+
+  .print-only th {
+    background-color: #F0F4F2 !important;
+    font-weight: 700 !important;
+    color: #1C2D27 !important;
+  }
+
+  .print-only tfoot td {
+    background-color: #F0F4F2 !important;
+    font-weight: 700 !important;
+    border-top: 2px solid #2B7A68 !important;
+  }
+
+  .print-only tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-only section,
+  .print-only .report-section {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    margin-bottom: 18px !important;
+  }
+
+  .print-only .note-card {
+    border: 1px solid #777777 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    padding: 6px 10px !important;
+    margin-bottom: 8px !important;
+    background: #FAFCFA !important;
+  }
+
+  .print-only .sub-metric-pill {
+    display: inline-block !important;
+    background: #F0F4F2 !important;
+    border: 1px solid #CCCCCC !important;
+    padding: 1px 4px !important;
+    margin: 1px 2px 1px 0 !important;
+    font-size: 7.5pt !important;
+    border-radius: 3px !important;
+  }
+
+  /* Clinical Report Abbreviation & Scale Legend */
+  .print-only .report-legend {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-top: 22px !important;
+    padding-top: 10px !important;
+    border-top: 2px solid #2B7A68 !important;
+    font-size: 8pt !important;
+    color: #222222 !important;
+  }
+
+  .print-only .report-legend .legend-header h3 {
+    font-size: 9.5pt !important;
+    color: #1C2D27 !important;
+    margin: 0 0 2px 0 !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .print-only .report-legend .legend-subtext {
+    font-size: 7.5pt !important;
+    color: #555555 !important;
+    margin: 0 0 8px 0 !important;
+  }
+
+  .print-only .legend-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px 12px !important;
+  }
+
+  .print-only .legend-block {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    border: 1px solid #CCCCCC !important;
+    border-radius: 3px !important;
+    padding: 5px 8px !important;
+    background: #FAFCFA !important;
+  }
+
+  .print-only .legend-block-title {
+    font-weight: 700 !important;
+    font-size: 7.5pt !important;
+    color: #2B7A68 !important;
+    border-bottom: 1px solid #E0E0E0 !important;
+    padding-bottom: 2px !important;
+    margin-bottom: 4px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  .print-only .legend-list {
+    margin: 0 !important;
+    padding-left: 12px !important;
+    font-size: 7.5pt !important;
+    line-height: 1.3 !important;
+  }
+
+  .print-only .legend-list li {
+    margin-bottom: 2px !important;
+  }
+
+  .print-only .legend-divider {
+    list-style: none !important;
+    margin: 4px 0 !important;
+    border-bottom: 1px dashed #CCCCCC !important;
+  }
+}
