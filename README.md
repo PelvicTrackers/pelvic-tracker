@@ -78,30 +78,6 @@ Install this application directly onto your home screen or desktop:
 - **Icons:** [Lucide React](https://lucide.dev/)
 - **Styling:** Modular CSS Tokens & CSS Variables
 
----
-
-## Local Development
-
-```bash
-# Clone the repository
-git clone https://github.com/PelvicTrackers/pelvic-tracker.git
-cd pelvic-tracker
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Run TypeScript type check
-npm run check
-
-# Build production bundle
-npm run build
-```
-
----
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
