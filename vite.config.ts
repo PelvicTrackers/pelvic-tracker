@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'pwa-192.svg'],
+      includeAssets: ['favicon.svg', 'pwa-192.png', 'pwa-512.png', 'apple-touch-icon.png'],
       manifest: {
         name: 'Pelvic Health Tracker',
         short_name: 'Pelvic Diary',
@@ -20,15 +20,20 @@ export default defineConfig({
         orientation: 'portrait-primary',
         icons: [
           {
-            src: 'pwa-192.svg',
+            src: 'pwa-192.png',
             sizes: '192x192',
-            type: 'image/svg+xml'
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
           },
           {
             src: 'favicon.svg',
-            sizes: '512x512',
-            type: 'image/svg+xml',
-            purpose: 'any maskable'
+            sizes: 'any',
+            type: 'image/svg+xml'
           }
         ]
       },
