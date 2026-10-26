@@ -1,7 +1,9 @@
 {
-  "name": "pelvic-trackers",
+  "name": "pelvic-tracker",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Zero-telemetry, local-first pelvic health symptom diary and clinical export tool.",
+  "homepage": "https://pelvictrackers.github.io/pelvic-tracker",
   "type": "module",
   "scripts": {
     "dev": "vite",
