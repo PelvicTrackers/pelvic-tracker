@@ -3,7 +3,8 @@ import type {
   UrinaryLogEntry,
   BowelLogEntry,
   PatientNote,
-  CustomMetricItem
+  CustomMetricItem,
+  AnatomyProfile
 } from '../../types';
 import {
   formatDateTime,
@@ -12,6 +13,11 @@ import {
   getUrinaryUrgencyLabel,
   CLINICAL_METRIC_LABELS
 } from '../logFormatters';
+import {
+  getArousalMetricLabel,
+  getClimaxMetricLabel,
+  getSplintingLabel
+} from '../../data/clinicalScales';
 
 function formatNotesAndMetricsMarkdown(
   notes?: string,
@@ -57,6 +63,7 @@ export function generateMarkdownReport(data: {
   notes: PatientNote[];
   patientInitials?: string;
   dateRangeLabel?: string;
+  anatomyProfile?: AnatomyProfile;
 }): string {
   const exportDate = formatDateTime(new Date().toISOString());
   const initials = data.patientInitials ? ` (Patient: ${data.patientInitials})` : '';
@@ -70,11 +77,14 @@ export function generateMarkdownReport(data: {
   md += `---\n\n`;
 
   // 1. Sexual Function & Pelvic Pain
+  const arousalCol = getArousalMetricLabel(data.anatomyProfile);
+  const climaxCol = getClimaxMetricLabel(data.anatomyProfile);
+
   md += `## 1. Sexual Function & Pelvic Pain Diary (IPC Standard)\n\n`;
   if (data.sexual.length === 0) {
     md += `*No sexual health entries recorded during this tracking period.*\n\n`;
   } else {
-    md += `| Date & Time | Activity | Position & Dur | Pain (Bef / Dur / Aft) | Erection/Arousal | Pleasure | Climax / Ejac | Clinical Notes & Scales |\n`;
+    md += `| Date & Time | Activity | Position & Dur | Pain (Bef / Dur / Aft) | ${arousalCol} | Pleasure | ${climaxCol} | Clinical Notes & Scales |\n`;
     md += `| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n`;
     for (const e of data.sexual) {
       const dur = e.durationMinutes !== null ? `${e.durationMinutes}m` : 'N/A';
@@ -83,7 +93,7 @@ export function generateMarkdownReport(data: {
       const arousalStr = e.erectionArousalScore !== null ? `${e.erectionArousalScore}%` : 'N/A';
       const pleasureStr = e.pleasureScore !== null ? `${e.pleasureScore}%` : 'N/A';
       const notesAndScales = formatNotesAndMetricsMarkdown(e.notes, e.metricComments, e.customMetrics);
-      md += `| ${formatDateTime(e.timestamp)} | ${getSexualActivityName(e.activity)} | ${pos} | ${painStr} | ${arousalStr} | ${pleasureStr} | ${getEjaculationName(e.ejaculation)} | ${notesAndScales} |\n`;
+      md += `| ${formatDateTime(e.timestamp)} | ${getSexualActivityName(e.activity)} | ${pos} | ${painStr} | ${arousalStr} | ${pleasureStr} | ${getEjaculationName(e.ejaculation, data.anatomyProfile)} | ${notesAndScales} |\n`;
     }
     md += `\n`;
   }
@@ -142,8 +152,9 @@ export function generateMarkdownReport(data: {
       const bristolStr = b.bristolType !== null ? `Type ${b.bristolType}` : 'N/A';
       const strainStr = b.strainingLevel !== null ? `${b.strainingLevel}/10` : 'N/A';
       const painStr = `${b.painBefore ?? 'N/A'} / ${b.painDuring ?? 'N/A'} / ${b.painAfter ?? 'N/A'}`;
+      const splintingDesc = b.posturalSplinting ? getSplintingLabel(b.posturalSplinting) : 'None';
       const notesAndScales = formatNotesAndMetricsMarkdown(b.notes, b.metricComments, b.customMetrics);
-      md += `| ${formatDateTime(b.timestamp)} | ${bristolStr} | ${strainStr} | ${b.evacuationCompleteness ?? 'N/A'} | ${painStr} | ${b.accidentalLeakage ?? 'N/A'} | ${b.posturalSplinting ?? 'N/A'} | ${notesAndScales} |\n`;
+      md += `| ${formatDateTime(b.timestamp)} | ${bristolStr} | ${strainStr} | ${b.evacuationCompleteness ?? 'N/A'} | ${painStr} | ${b.accidentalLeakage ?? 'N/A'} | ${splintingDesc} | ${notesAndScales} |\n`;
     }
     md += `\n`;
   }

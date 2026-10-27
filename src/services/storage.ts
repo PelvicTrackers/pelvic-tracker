@@ -265,16 +265,30 @@ export const StorageService = {
     const defaultSettings: AppSettings = {
       privacyMode: false,
       volumeUnit: 'mL',
-      patientInitials: ''
+      patientInitials: '',
+      onboardingCompleted: false,
+      anatomyProfile: 'neutral',
+      customAnatomy: {
+        trackErection: true,
+        trackLubricationArousal: true,
+        trackEjaculation: true,
+        trackVaginalSplinting: true,
+        trackPerinealSplinting: true,
+        trackPostMicturitionDribble: true
+      }
     };
     try {
       const db = await getDb();
       const val = await db.get('app_settings', 'main');
       if (val && typeof val === 'object' && 'settings' in val) {
+        const s = (val as { settings: AppSettings }).settings;
         return {
-          privacyMode: Boolean((val as { settings: AppSettings }).settings.privacyMode),
-          volumeUnit: (val as { settings: AppSettings }).settings.volumeUnit ?? 'mL',
-          patientInitials: (val as { settings: AppSettings }).settings.patientInitials ?? ''
+          privacyMode: Boolean(s.privacyMode),
+          volumeUnit: s.volumeUnit ?? 'mL',
+          patientInitials: s.patientInitials ?? '',
+          onboardingCompleted: Boolean(s.onboardingCompleted),
+          anatomyProfile: s.anatomyProfile ?? 'neutral',
+          customAnatomy: s.customAnatomy ?? defaultSettings.customAnatomy
         };
       }
       return defaultSettings;

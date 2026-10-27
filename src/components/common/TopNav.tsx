@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Eye, EyeOff, Share2, Activity } from 'lucide-react';
+import { ShieldCheck, Eye, EyeOff, Share2, Activity, Settings } from 'lucide-react';
 import { useLogStore } from '../../store/useLogStore';
 
 export const TopNav: React.FC = () => {
@@ -7,6 +7,7 @@ export const TopNav: React.FC = () => {
   const togglePrivacyMode = useLogStore((s) => s.togglePrivacyMode);
   const setShowPrivacyModal = useLogStore((s) => s.setShowPrivacyModal);
   const setShowExportModal = useLogStore((s) => s.setShowExportModal);
+  const setShowSettingsModal = useLogStore((s) => s.setShowSettingsModal);
 
   return (
     <header className="top-header">
@@ -49,6 +50,16 @@ export const TopNav: React.FC = () => {
           aria-label="Open export and clinical report modal"
         >
           <Share2 size={20} />
+        </button>
+
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={() => setShowSettingsModal(true)}
+          title="Settings & Anatomical Tracking Preferences"
+          aria-label="Open Settings and Anatomical Preferences"
+        >
+          <Settings size={20} />
         </button>
       </div>
     </header>

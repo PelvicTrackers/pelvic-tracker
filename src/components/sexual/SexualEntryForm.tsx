@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { X, Check, Clock } from 'lucide-react';
 import type { SexualLogEntry, SexualActivityType, EjaculationType, CustomMetricItem } from '../../types';
-import { SEXUAL_ACTIVITIES, EJACULATION_OPTIONS } from '../../data/clinicalScales';
+import {
+  SEXUAL_ACTIVITIES,
+  getClimaxOptions,
+  getArousalMetricLabel,
+  getClimaxMetricLabel
+} from '../../data/clinicalScales';
 import { formatDateTime } from '../../utils/logFormatters';
+import { useLogStore } from '../../store/useLogStore';
 import {
   ClinicalPainSlider,
   ClinicalSlider,
@@ -25,6 +31,12 @@ export const SexualEntryForm: React.FC<SexualEntryFormProps> = ({
   onSave,
   onClose
 }) => {
+  const anatomyProfile = useLogStore((s) => s.anatomyProfile);
+  const customAnatomy = useLogStore((s) => s.customAnatomy);
+
+  const arousalLabel = getArousalMetricLabel(anatomyProfile, customAnatomy);
+  const climaxLabel = getClimaxMetricLabel(anatomyProfile);
+  const climaxOptions = getClimaxOptions(anatomyProfile);
   const [timestamp, setTimestamp] = useState<string>(
     initialEntry?.timestamp ?? new Date().toISOString()
   );
@@ -243,12 +255,12 @@ export const SexualEntryForm: React.FC<SexualEntryFormProps> = ({
                 </span>
 
                 <MetricFieldWrapper
-                  label="Erection / Arousal Quality"
+                  label={arousalLabel}
                   isNA={erectionArousalScore === null}
                   onNAToggle={(isNA) => setErectionArousalScore(isNA ? null : 80)}
                   comment={metricComments['erectionArousalScore']}
                   onCommentChange={(comment) => setMetricComment('erectionArousalScore', comment)}
-                  commentPlaceholder="e.g. Difficulty maintaining, required manual stimulation..."
+                  commentPlaceholder="e.g. Observations regarding response, support, or comfort..."
                 >
                   <ClinicalSlider
                     hideLabel
@@ -278,10 +290,10 @@ export const SexualEntryForm: React.FC<SexualEntryFormProps> = ({
                 </MetricFieldWrapper>
 
                 <MetricFieldWrapper
-                  label="Ejaculation / Climax"
+                  label={climaxLabel}
                   comment={metricComments['ejaculation']}
                   onCommentChange={(comment) => setMetricComment('ejaculation', comment)}
-                  commentPlaceholder="e.g. Sensation of burning during climax..."
+                  commentPlaceholder="e.g. Observations regarding timing, comfort, or sensation..."
                 >
                   <select
                     id="sex-ejac"
@@ -289,7 +301,7 @@ export const SexualEntryForm: React.FC<SexualEntryFormProps> = ({
                     value={ejaculation}
                     onChange={(e) => setEjaculation(e.target.value as EjaculationType)}
                   >
-                    {EJACULATION_OPTIONS.map((opt) => (
+                    {climaxOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label} — {opt.description}
                       </option>

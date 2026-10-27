@@ -8,7 +8,13 @@ export type BowelUrgencyLevel = 0 | 1 | 2 | 3;
 
 export type AccidentalBowelLeakage = 'none' | 'gas' | 'soiling' | 'fecal_incontinence';
 
-export type PosturalSplintingAssistance = 'none' | 'squatty_potty' | 'manual_splinting' | 'both';
+export type PosturalSplintingAssistance =
+  | 'none'
+  | 'squatty_potty'
+  | 'manual_splinting'
+  | 'perineal_splinting'
+  | 'vaginal_splinting'
+  | 'both';
 
 export interface BowelLogEntry {
   id: string;

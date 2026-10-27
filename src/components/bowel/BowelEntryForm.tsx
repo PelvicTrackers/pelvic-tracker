@@ -9,8 +9,9 @@ import type {
   PosturalSplintingAssistance,
   CustomMetricItem
 } from '../../types';
-import { POSTURAL_SPLINTING_OPTIONS } from '../../data/clinicalScales';
+import { getSplintingOptions } from '../../data/clinicalScales';
 import { formatDateTime } from '../../utils/logFormatters';
+import { useLogStore } from '../../store/useLogStore';
 import { BristolStoolPicker } from './BristolStoolPicker';
 import {
   ClinicalPainSlider,
@@ -32,6 +33,10 @@ export const BowelEntryForm: React.FC<BowelEntryFormProps> = ({
   onSave,
   onClose
 }) => {
+  const anatomyProfile = useLogStore((s) => s.anatomyProfile);
+  const customAnatomy = useLogStore((s) => s.customAnatomy);
+  const splintingOptions = getSplintingOptions(anatomyProfile, customAnatomy);
+
   const [timestamp, setTimestamp] = useState<string>(
     initialEntry?.timestamp ?? new Date().toISOString()
   );
@@ -259,7 +264,7 @@ export const BowelEntryForm: React.FC<BowelEntryFormProps> = ({
                       value={posturalSplinting}
                       onChange={(e) => setPosturalSplinting(e.target.value as PosturalSplintingAssistance)}
                     >
-                      {POSTURAL_SPLINTING_OPTIONS.map((opt) => (
+                      {splintingOptions.map((opt) => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>

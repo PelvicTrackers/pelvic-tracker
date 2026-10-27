@@ -10,3 +10,6 @@ export * from './BottomNav';
 export * from './CustomMetricsSection';
 export * from './EntryMetricsDisplay';
 export * from './DurationPicker';
+export * from './AnatomyProfileSelector';
+export * from './AnatomyOnboardingModal';
+export * from './SettingsModal';

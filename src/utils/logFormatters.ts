@@ -1,16 +1,23 @@
 import {
   BRISTOL_STOOL_SCALE,
-  EJACULATION_OPTIONS,
   SEXUAL_ACTIVITIES,
-  URINARY_URGENCY_LEVELS
+  URINARY_URGENCY_LEVELS,
+  getClimaxOptions
 } from '../data/clinicalScales';
 import type {
   BristolStoolType,
   CustomMetricItem,
   EjaculationType,
   SexualActivityType,
-  UrgencyLevel
+  UrgencyLevel,
+  AnatomyProfile
 } from '../types';
+
+export function getEjaculationName(ejac: EjaculationType, profile?: AnatomyProfile): string {
+  const options = getClimaxOptions(profile);
+  const match = options.find((e) => e.value === ejac);
+  return match ? match.label : ejac;
+}
 
 export function formatDateTime(isoString: string): string {
   try {
@@ -99,11 +106,6 @@ export function getPainColor(painScore: number | null): string {
 export function getSexualActivityName(activity: SexualActivityType): string {
   const match = SEXUAL_ACTIVITIES.find((a) => a.value === activity);
   return match ? `${match.value} (${match.fullTitle})` : activity;
-}
-
-export function getEjaculationName(ejac: EjaculationType): string {
-  const match = EJACULATION_OPTIONS.find((e) => e.value === ejac);
-  return match ? match.label : ejac;
 }
 
 export function getBristolDescription(type: BristolStoolType): string {

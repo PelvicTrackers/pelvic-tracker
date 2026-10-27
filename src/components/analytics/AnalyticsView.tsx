@@ -20,11 +20,14 @@ import {
   type ChartSeries
 } from './SymptomTrendChart';
 import { formatDateOnly } from '../../utils/logFormatters';
+import { getArousalMetricLabel } from '../../data/clinicalScales';
 
 export const AnalyticsView: React.FC = () => {
   const sexualEntries = useLogStore((s) => s.sexualEntries);
   const urinaryEntries = useLogStore((s) => s.urinaryEntries);
   const bowelEntries = useLogStore((s) => s.bowelEntries);
+  const anatomyProfile = useLogStore((s) => s.anatomyProfile);
+  const customAnatomy = useLogStore((s) => s.customAnatomy);
 
   const [periodDays, setPeriodDays] = useState<TrendPeriodDays>(14);
   const [activeCategory, setActiveCategory] = useState<'sexual-pain' | 'urinary' | 'bowel' | 'sexual-func'>('sexual-pain');
@@ -181,7 +184,7 @@ export const AnalyticsView: React.FC = () => {
       },
       {
         id: 'sex-arousal',
-        label: 'Erection / Arousal',
+        label: getArousalMetricLabel(anatomyProfile, customAnatomy),
         color: '#8B5CF6',
         unit: '%',
         points: sexualEntries
@@ -195,7 +198,7 @@ export const AnalyticsView: React.FC = () => {
           }))
       }
     ];
-  }, [sexualEntries]);
+  }, [sexualEntries, anatomyProfile, customAnatomy]);
 
   return (
     <div className="main-view-container">

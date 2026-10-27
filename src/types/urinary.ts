@@ -8,7 +8,7 @@ export type VoidStreamCharacteristic = 'normal' | 'hesitant' | 'straining' | 'in
 
 export type UrgencyLevel = 0 | 1 | 2 | 3;
 
-export type LeakageType = 'none' | 'stress' | 'urge' | 'mixed' | 'continuous' | 'other';
+export type LeakageType = 'none' | 'stress' | 'urge' | 'mixed' | 'continuous' | 'post_void_dribble' | 'other';
 
 export type LeakageAmount = 'none' | 'drops' | 'moderate' | 'soaked';
 

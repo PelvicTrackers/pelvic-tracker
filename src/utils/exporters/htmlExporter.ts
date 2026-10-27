@@ -3,7 +3,8 @@ import type {
   UrinaryLogEntry,
   BowelLogEntry,
   PatientNote,
-  CustomMetricItem
+  CustomMetricItem,
+  AnatomyProfile
 } from '../../types';
 import {
   formatDateTime,
@@ -12,6 +13,11 @@ import {
   getUrinaryUrgencyLabel,
   CLINICAL_METRIC_LABELS
 } from '../logFormatters';
+import {
+  getArousalMetricLabel,
+  getClimaxMetricLabel,
+  getSplintingLabel
+} from '../../data/clinicalScales';
 
 export function generateHtmlReport(data: {
   sexual: SexualLogEntry[];
@@ -20,6 +26,7 @@ export function generateHtmlReport(data: {
   notes: PatientNote[];
   patientInitials?: string;
   dateRangeLabel?: string;
+  anatomyProfile?: AnatomyProfile;
 }): string {
   const exportDate = formatDateTime(new Date().toISOString());
   const patient = data.patientInitials ? `Patient: ${escapeHtml(data.patientInitials)}` : 'Confidential Patient Record';
@@ -192,7 +199,7 @@ export function generateHtmlReport(data: {
   </div>
 
   <h2>1. Sexual Function & Pelvic Pain Diary</h2>
-  ${renderSexualTable(data.sexual)}
+  ${renderSexualTable(data.sexual, data.anatomyProfile)}
 
   <h2>2. Urinary & Bladder Diary</h2>
   <h3>2.1 Urinary Voids & Fluid Intake</h3>
@@ -319,8 +326,10 @@ function formatNotesAndMetricsHtml(
   return parts.length > 0 ? parts.join('') : '-';
 }
 
-function renderSexualTable(entries: SexualLogEntry[]): string {
+function renderSexualTable(entries: SexualLogEntry[], profile?: AnatomyProfile): string {
   if (entries.length === 0) return '<p><em>No sexual health entries recorded.</em></p>';
+  const arousalCol = getArousalMetricLabel(profile);
+  const climaxCol = getClimaxMetricLabel(profile);
   let rows = '';
   for (const e of entries) {
     const dur = e.durationMinutes !== null ? `${e.durationMinutes}m` : 'N/A';
@@ -337,7 +346,7 @@ function renderSexualTable(entries: SexualLogEntry[]): string {
       <td><strong>${painStr}</strong></td>
       <td>${arousalStr}</td>
       <td>${pleasureStr}</td>
-      <td>${escapeHtml(getEjaculationName(e.ejaculation))}</td>
+      <td>${escapeHtml(getEjaculationName(e.ejaculation, profile))}</td>
       <td>${notesAndScales}</td>
     </tr>`;
   }
@@ -348,9 +357,9 @@ function renderSexualTable(entries: SexualLogEntry[]): string {
         <th style="width: 14%">Activity</th>
         <th style="width: 14%">Position (Dur)</th>
         <th style="width: 13%">Pain (B/D/A)</th>
-        <th style="width: 8%">Arousal</th>
+        <th style="width: 8%">${escapeHtml(arousalCol)}</th>
         <th style="width: 8%">Pleasure</th>
-        <th style="width: 10%">Ejaculation</th>
+        <th style="width: 10%">${escapeHtml(climaxCol)}</th>
         <th>Clinical Notes & Scales</th>
       </tr>
     </thead>
@@ -440,7 +449,7 @@ function renderBowelTable(entries: BowelLogEntry[]): string {
       <td>${escapeHtml(b.evacuationCompleteness ?? 'N/A')}</td>
       <td>${painStr}</td>
       <td>${escapeHtml(b.accidentalLeakage ?? 'N/A')}</td>
-      <td>${escapeHtml(b.posturalSplinting ?? 'N/A')}</td>
+      <td>${escapeHtml(b.posturalSplinting ? getSplintingLabel(b.posturalSplinting) : 'None')}</td>
       <td>${notesAndScales}</td>
     </tr>`;
   }

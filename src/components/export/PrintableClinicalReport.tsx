@@ -7,6 +7,11 @@ import {
   getUrinaryUrgencyLabel,
   CLINICAL_METRIC_LABELS
 } from '../../utils/logFormatters';
+import {
+  getArousalMetricLabel,
+  getClimaxMetricLabel,
+  getSplintingLabel
+} from '../../data/clinicalScales';
 import { filterEntriesByDateRange, formatDateRangeLabel } from '../../utils/dateFilters';
 import { ReportLegend } from './ReportLegend';
 import { PrintableThreeDayDiary } from './PrintableThreeDayDiary';
@@ -81,6 +86,11 @@ export const PrintableClinicalReport: React.FC = () => {
   const customStartDate = useLogStore((s) => s.customStartDate);
   const customEndDate = useLogStore((s) => s.customEndDate);
   const includeChartsInReport = useLogStore((s) => s.includeChartsInReport);
+  const anatomyProfile = useLogStore((s) => s.anatomyProfile);
+  const customAnatomy = useLogStore((s) => s.customAnatomy);
+
+  const arousalLabel = getArousalMetricLabel(anatomyProfile, customAnatomy);
+  const climaxLabel = getClimaxMetricLabel(anatomyProfile);
 
   const exportDate = React.useMemo(() => formatDateTime(new Date().toISOString()), []);
   const dateFilterLabel = formatDateRangeLabel(exportDateRange, customStartDate, customEndDate);
@@ -122,9 +132,9 @@ export const PrintableClinicalReport: React.FC = () => {
                 <th style={{ width: '13%' }}>Activity</th>
                 <th style={{ width: '14%' }}>Position (Dur)</th>
                 <th style={{ width: '13%', textAlign: 'center' }}>Pain (B / D / A)</th>
-                <th style={{ width: '8%', textAlign: 'center' }}>Arousal</th>
+                <th style={{ width: '8%', textAlign: 'center' }}>{arousalLabel}</th>
                 <th style={{ width: '8%', textAlign: 'center' }}>Pleasure</th>
-                <th style={{ width: '11%' }}>Ejaculation</th>
+                <th style={{ width: '11%' }}>{climaxLabel}</th>
                 <th>Clinical Notes & Scales</th>
               </tr>
             </thead>
@@ -139,7 +149,7 @@ export const PrintableClinicalReport: React.FC = () => {
                   </td>
                   <td style={{ textAlign: 'center' }}>{e.erectionArousalScore !== null ? `${e.erectionArousalScore}%` : 'N/A'}</td>
                   <td style={{ textAlign: 'center' }}>{e.pleasureScore !== null ? `${e.pleasureScore}%` : 'N/A'}</td>
-                  <td>{getEjaculationName(e.ejaculation)}</td>
+                  <td>{getEjaculationName(e.ejaculation, anatomyProfile)}</td>
                   <td>
                     <NotesAndMetricsCell
                       notes={e.notes}
@@ -277,7 +287,7 @@ export const PrintableClinicalReport: React.FC = () => {
                   <td>{b.evacuationCompleteness ?? 'N/A'}</td>
                   <td style={{ textAlign: 'center' }}>{b.painBefore ?? 'N/A'} / {b.painDuring ?? 'N/A'} / {b.painAfter ?? 'N/A'}</td>
                   <td>{b.accidentalLeakage ?? 'N/A'}</td>
-                  <td>{b.posturalSplinting ?? 'N/A'}</td>
+                  <td>{b.posturalSplinting ? getSplintingLabel(b.posturalSplinting) : 'None'}</td>
                   <td>
                     <NotesAndMetricsCell
                       notes={b.notes}

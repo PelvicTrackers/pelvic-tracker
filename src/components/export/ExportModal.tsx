@@ -25,6 +25,7 @@ export const ExportModal: React.FC = () => {
   const setShowExportModal = useLogStore((s) => s.setShowExportModal);
   const patientInitials = useLogStore((s) => s.patientInitials);
   const setPatientInitials = useLogStore((s) => s.setPatientInitials);
+  const anatomyProfile = useLogStore((s) => s.anatomyProfile);
 
   const sexual = useLogStore((s) => s.sexualEntries);
   const urinary = useLogStore((s) => s.urinaryEntries);
@@ -74,7 +75,8 @@ export const ExportModal: React.FC = () => {
       bowel: filteredBowel,
       notes: filteredNotes,
       patientInitials,
-      dateRangeLabel: activeRangeLabel
+      dateRangeLabel: activeRangeLabel,
+      anatomyProfile
     });
     await navigator.clipboard.writeText(md);
     setCopiedMd(true);
@@ -88,7 +90,8 @@ export const ExportModal: React.FC = () => {
       bowel: filteredBowel,
       notes: filteredNotes,
       patientInitials,
-      dateRangeLabel: activeRangeLabel
+      dateRangeLabel: activeRangeLabel,
+      anatomyProfile
     });
     const blob = new Blob([md], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
@@ -110,7 +113,8 @@ export const ExportModal: React.FC = () => {
       bowel: filteredBowel,
       notes: filteredNotes,
       patientInitials,
-      dateRangeLabel: activeRangeLabel
+      dateRangeLabel: activeRangeLabel,
+      anatomyProfile
     });
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);

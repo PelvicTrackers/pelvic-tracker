@@ -7,6 +7,10 @@ import {
   getEjaculationName,
   getPainColor
 } from '../../utils/logFormatters';
+import {
+  getArousalMetricLabel,
+  getClimaxMetricLabel
+} from '../../data/clinicalScales';
 import { useLogStore } from '../../store/useLogStore';
 import { EntryMetricsDisplay } from '../common';
 
@@ -16,18 +20,23 @@ interface SexualEntryCardProps {
   onDelete: (id: string) => void;
 }
 
-const METRIC_LABELS: Record<string, string> = {
-  durationMinutes: 'Duration',
-  painBefore: 'Pain Before',
-  painDuring: 'Pain During',
-  painAfter: 'Pain After',
-  erectionArousalScore: 'Erection / Arousal',
-  pleasureScore: 'Pleasure Score',
-  ejaculation: 'Ejaculation'
-};
-
 export const SexualEntryCard: React.FC<SexualEntryCardProps> = ({ entry, onEdit, onDelete }) => {
   const privacyMode = useLogStore((s) => s.privacyMode);
+  const anatomyProfile = useLogStore((s) => s.anatomyProfile);
+  const customAnatomy = useLogStore((s) => s.customAnatomy);
+
+  const arousalLabel = getArousalMetricLabel(anatomyProfile, customAnatomy);
+  const climaxLabel = getClimaxMetricLabel(anatomyProfile);
+
+  const metricLabels: Record<string, string> = {
+    durationMinutes: 'Duration',
+    painBefore: 'Pain Before',
+    painDuring: 'Pain During',
+    painAfter: 'Pain After',
+    erectionArousalScore: arousalLabel,
+    pleasureScore: 'Pleasure Score',
+    ejaculation: climaxLabel
+  };
 
   return (
     <article className="entry-card">
@@ -93,7 +102,7 @@ export const SexualEntryCard: React.FC<SexualEntryCardProps> = ({ entry, onEdit,
         </div>
 
         <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>Erection / Arousal</span>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{arousalLabel}</span>
           <span style={{ fontWeight: 700, color: entry.erectionArousalScore !== null ? 'var(--text-primary)' : 'var(--text-muted)' }}>
             {entry.erectionArousalScore !== null ? `${entry.erectionArousalScore}%` : 'N/A'}
           </span>
@@ -107,9 +116,9 @@ export const SexualEntryCard: React.FC<SexualEntryCardProps> = ({ entry, onEdit,
         </div>
 
         <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>Ejaculation</span>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{climaxLabel}</span>
           <span style={{ fontWeight: 600, fontSize: '0.82rem', color: 'var(--text-primary)' }}>
-            {getEjaculationName(entry.ejaculation)}
+            {getEjaculationName(entry.ejaculation, anatomyProfile)}
           </span>
         </div>
       </div>
@@ -135,7 +144,7 @@ export const SexualEntryCard: React.FC<SexualEntryCardProps> = ({ entry, onEdit,
       <EntryMetricsDisplay
         customMetrics={entry.customMetrics}
         metricComments={entry.metricComments}
-        metricLabels={METRIC_LABELS}
+        metricLabels={metricLabels}
         privacyMode={privacyMode}
       />
 

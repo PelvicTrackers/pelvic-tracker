@@ -3,6 +3,8 @@ import { useLogStore } from './store/useLogStore';
 import { TopNav } from './components/common/TopNav';
 import { BottomNav } from './components/common/BottomNav';
 import { PrivacyNoticeModal } from './components/common/PrivacyNoticeModal';
+import { AnatomyOnboardingModal } from './components/common/AnatomyOnboardingModal';
+import { SettingsModal } from './components/common/SettingsModal';
 import { ExportModal } from './components/export/ExportModal';
 import { PrintableClinicalReport } from './components/export/PrintableClinicalReport';
 import { SexualLogView } from './components/sexual/SexualLogView';
@@ -43,6 +45,8 @@ export function App() {
         onClose={() => setShowPrivacyModal(false)}
       />
       <ExportModal />
+      <AnatomyOnboardingModal />
+      <SettingsModal />
 
       {/* Hidden clinical view rendered during window.print() */}
       <PrintableClinicalReport />
